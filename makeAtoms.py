@@ -22,7 +22,7 @@ def write_obj(write_path,obj):
     write(write_path,obj)
     return None
 
-def place_dopant(atoms,dopantAdd,dopantThere):
+def place_dopant(atoms,dopantAdd):
     symbols = "Ti2O4Ti2O4Ti2O4Ti2O4Ti2O4Ti2O4Ti2O4Ti2O"+dopantAdd+"O2"
     pos, con, cell = atoms.positions, atoms.constraints, atoms.cell
     new_atoms = Atoms(symbols=symbols,pbc=True,cell=cell,positions=pos,constraint=con)
@@ -38,7 +38,8 @@ def fix_atoms(atoms,constraint):
 def place_adsorbate(slab,species):
     add_adsorbate(slab, species, 1.34823, (-0.2305603365560289, 2.7825235214147974))
     add_adsorbate(slab, species, 2.48744, (-0.3525537826397047, 2.6017940132659629))
-    return None
+    slab.set_constraint(Hookean(a1=48, a2=49, rt=1.09, k=14))
+    return slab
 
 def view_atoms(atoms_obj):
     view(atoms_obj)
@@ -50,23 +51,20 @@ def get_pe(atoms_obj):
 def read_traj(traj_file):
     return read(traj_file, index=-1)
 
-# fixDope = FixAtoms(indices = [atom.index for atom in sim])
-# hook = Hookean(a1 = 48, a2 = 49, rt = 1.09, k = 14)
-# sim.set_constraint(hook)
-# sim.set_constraint(fixDope)
-
 if __name__ == '__main__':
 
     base = '/Users/jamesmccord/Dropbox (GaTech)/pBlock'
     sem_dir = 'fall2021'
-    sub_dir = 'Br'
+    dopant = 'Se'
+    traj_file = dopant + '_base_slab.traj'
 
-    read_path = os.path.join(base,sem_dir,'POSCAR')
-    write_path = os.path.join(base,sem_dir,'slab_base.traj')
+    read_path = os.path.join(base,sem_dir,'slab_base.traj')
+    write_path = os.path.join(base,sem_dir,dopant,'Base',traj_file)
 
-    slab = read_poscar(read_path)
+    slab = read_traj(read_path)
+    slab = place_dopant(slab,dopant)
+    slab = place_adsorbate(slab,'O')
     slab = fix_atoms(slab,slab.positions[:, 2] < 11.0)
-    slab = place_dopant(slab,'Br','B')
-    write_obj(write_path, slab)
+    # write_obj(write_path, slab)
     view_atoms(slab)
 
