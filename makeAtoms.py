@@ -17,6 +17,9 @@ def read_poscar(path):
     # slab.set_constraint(fix)
     return slab
 
+def read_traj(traj_file):
+    return read(traj_file, index=-1)
+
 def write_obj(write_path,obj):
     # write .traj or POSCAR files
     write(write_path,obj)
@@ -48,21 +51,18 @@ def view_atoms(atoms_obj):
 def get_pe(atoms_obj):
     return atoms_obj.get_potential_energy()
 
-def read_traj(traj_file):
-    return read(traj_file, index=-1)
-
 if __name__ == '__main__':
 
     base = '/Users/jamesmccord/Dropbox (GaTech)/pBlock'
     sem_dir = 'fall2021'
-    dopant = 'S'
+    dopant = 'C'
 
-    read_path = os.path.join(base,sem_dir,dopant,'Base','atoms.traj')
-    write_path = os.path.join(base,sem_dir,dopant,'O2','S_base_O2.traj')
+    read_path = os.path.join(base,sem_dir,'base_slab.traj')
+    write_path = os.path.join(base,sem_dir,dopant,'Base','c_base_slab.traj')
 
     slab = read_traj(read_path)
-    # slab = place_dopant(slab,dopant)
-    slab = place_adsorbate(slab,'O')
+    slab = place_dopant(slab,dopant)
+    # slab = place_adsorbate(slab,'O')
     slab = fix_atoms(slab,slab.positions[:, 2] < 11.0)
     write_obj(write_path, slab)
     view_atoms(slab)
