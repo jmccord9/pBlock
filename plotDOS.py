@@ -22,9 +22,9 @@ _VALS = {'max_values': [],
 def parse_pw_out(filepath):
     # Write code that parses pw.out file, extracts relevant values,
     # and appends calculations to the _VALS dictionary.
-    _VALS['E_fermi'] = 1.6017
-    _VALS['n_electrons'] = 383
-    _VALS['HOMO_index'] = int(math.ceil(_VALS['n_electrons']/2)) -1
+    _VALS['E_fermi'] = 2.6104
+    _VALS['n_electrons'] = 395
+    _VALS['HOMO_index'] = int(math.floor(_VALS['n_electrons']/2)) -1
     _VALS['LUMO_index'] = _VALS['HOMO_index'] + 1
     return
 
@@ -96,9 +96,10 @@ def colminusrow(x, y):
 
 if __name__ == '__main__':
 
-    base = '/Users/jamesmccord/Dropbox (GaTech)/pBlock/fall2021/final_data/N/Base/'
+    base = '/Users/jamesmccord/Dropbox (GaTech)/pBlock/fall2021/final_data/N/O2/'
     xml_file, out_file = 'data-file-schema.xml', 'pw.out'
     xml_path, out_path = os.path.join(base,xml_file), os.path.join(base,out_file)
+    fig_path = os.path.join(base,'DOS_zoom.png')
 
     parse_pw_out(out_path)
     read_surface_file_xml(xml_path)
@@ -116,9 +117,10 @@ if __name__ == '__main__':
     plt.axvline(x=_VALS['E_fermi'], color='cyan', label='Fermi level')
     plt.axvline(x=np.max(_VALS['HOMO_values'])/eV2Ha, color='black', label='HOMO')
     plt.axvline(x=np.min(_VALS['LUMO_values'])/eV2Ha, color='green', label='LUMO')
-    # plt.xlim([-10, 10])
     plt.legend()
     plt.xlabel('Energy (eV)')
     plt.ylabel('Density of States')
+    plt.xlim([-10, 10])
+    # plt.savefig(fig_path, bbox_inches='tight')
     plt.show()
 
