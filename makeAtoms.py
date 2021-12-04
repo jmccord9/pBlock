@@ -55,15 +55,15 @@ if __name__ == '__main__':
 
     base = '/Users/jamesmccord/Dropbox (GaTech)/pBlock'
     sem_dir = 'fall2021'
-    dopant = 'C'
+    dopant = 'O'
 
-    read_path = os.path.join(base,sem_dir,'base_slab.traj')
-    write_path = os.path.join(base,sem_dir,dopant,'Base','c_base_slab.traj')
+    read_path = os.path.join(base,sem_dir,'base_slab_relax/atoms.traj')
+    write_path = os.path.join(base,sem_dir,'real_base_slab.traj')
 
     slab = read_traj(read_path)
-    slab = place_dopant(slab,dopant)
+    # slab = place_dopant(slab,dopant)
     # slab = place_adsorbate(slab,'O')
-    slab = fix_atoms(slab,slab.positions[:, 2] < 11.0)
-    write_obj(write_path, slab)
+    # slab = fix_atoms(slab,slab.positions[:, 2] < 11.0)
+    # write_obj(write_path, slab)
     view_atoms(slab)
 

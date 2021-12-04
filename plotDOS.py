@@ -3,6 +3,7 @@ import os
 import math
 import matplotlib.pyplot as plt
 import xml.etree.ElementTree as ET
+from parsimonious.grammar import Grammar
 
 eV2Ha = 1/27.21138397
 
@@ -20,11 +21,17 @@ _VALS = {'max_values': [],
          'n_electrons': None}
 
 def parse_pw_out(filepath):
-    # Write code that parses pw.out file, extracts relevant values,
-    # and appends calculations to the _VALS dictionary.
-    _VALS['E_fermi'] = 2.6104
-    _VALS['n_electrons'] = 395
-    _VALS['HOMO_index'] = int(math.floor(_VALS['n_electrons']/2)) -1
+    # Parse pw.out for Fermi energy and number of electrons
+    with open(filepath) as f:
+        for line in f:
+            li = line.strip()
+            if li.startswith('number of electrons'):
+                _VALS['n_electrons'] = int(float(li.split()[-1]))
+            if li.startswith('the Fermi energy is'):
+                fermi_string = li
+
+    _VALS['E_fermi'] = float(fermi_string.split()[-2])
+    _VALS['HOMO_index'] = int(math.ceil(_VALS['n_electrons']/2)) -1
     _VALS['LUMO_index'] = _VALS['HOMO_index'] + 1
     return
 
@@ -96,10 +103,10 @@ def colminusrow(x, y):
 
 if __name__ == '__main__':
 
-    base = '/Users/jamesmccord/Dropbox (GaTech)/pBlock/fall2021/final_data/N/O2/'
+    base = '/Users/jamesmccord/Dropbox (GaTech)/pBlock/fall2021/final_data/N/Base'
     xml_file, out_file = 'data-file-schema.xml', 'pw.out'
     xml_path, out_path = os.path.join(base,xml_file), os.path.join(base,out_file)
-    fig_path = os.path.join(base,'DOS_zoom.png')
+    fig_path = os.path.join('/Users/jamesmccord/Dropbox (GaTech)/pBlock/fall2021/final_data/N/Base','DOS_more_zoom.png')
 
     parse_pw_out(out_path)
     read_surface_file_xml(xml_path)
@@ -120,7 +127,7 @@ if __name__ == '__main__':
     plt.legend()
     plt.xlabel('Energy (eV)')
     plt.ylabel('Density of States')
-    plt.xlim([-10, 10])
-    # plt.savefig(fig_path, bbox_inches='tight')
+    plt.xlim([-5, 5])
+    # plt.savefig(fig_path, dpi=300, bbox_inches='tight')
     plt.show()
 
