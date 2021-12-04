@@ -33,6 +33,7 @@ def parse_pw_out(filepath):
     _VALS['E_fermi'] = float(fermi_string.split()[-2])
     _VALS['HOMO_index'] = int(math.ceil(_VALS['n_electrons']/2)) -1
     _VALS['LUMO_index'] = _VALS['HOMO_index'] + 1
+    print("Hello")
     return
 
 def read_surface_file_xml(filepath):
