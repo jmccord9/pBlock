@@ -39,8 +39,9 @@ def fix_atoms(atoms,constraint):
     return atoms
 
 def place_adsorbate(slab,species):
-    add_adsorbate(slab, species, 1.34823, (-0.2305603365560289, 2.7825235214147974))
-    add_adsorbate(slab, species, 2.48744, (-0.3525537826397047, 2.6017940132659629))
+    # Refer to https://wiki.fysik.dtu.dk/ase/ase/build/surface.html#ase.build.add_adsorbate
+    add_adsorbate(slab, species, 1.2, (-0.2305603365560289, 2.7825235214147974)) # 1.34823
+    add_adsorbate(slab, species, 2.3, (-0.3525537826397047, 2.6017940132659629)) # 2.48744
     slab.set_constraint(Hookean(a1=48, a2=49, rt=1.09, k=14))
     return slab
 
@@ -53,12 +54,12 @@ def get_pe(atoms_obj):
 
 if __name__ == '__main__':
 
-    base = '/Users/jamesmccord/Dropbox (GaTech)/pBlock'
-    sem_dir = 'fall2021'
+    working_dir = '/Users/jamesmccord/Documents/pBlock/fall2021'
+    base_slab_file = './base_slab.traj'
     dopant = 'O'
 
-    read_path = os.path.join(base,sem_dir,'base_slab_relax/atoms.traj')
-    write_path = os.path.join(base,sem_dir,'real_base_slab.traj')
+    read_path = os.path.join(base_slab_file)
+    write_path = os.path.join(working_dir,'write.traj')
 
     slab = read_traj(read_path)
     # slab = place_dopant(slab,dopant)
